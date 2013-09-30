@@ -16,7 +16,7 @@ namespace jingziqi
             InitializeComponent();
             
         }
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        /*private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics; //创建画板,这里的画板是由Form提供的.
             Pen blackpen = new Pen(Color.Black, 2);//定义了一个黑色,宽度为的画笔
@@ -25,7 +25,7 @@ namespace jingziqi
             g.DrawLine(blackpen, 59, 193, 305, 193);
             g.DrawLine(blackpen, 141, 29, 141, 275);
             g.DrawLine(blackpen, 223, 29, 223, 275);
-        }
+        }*/
 
        
     
