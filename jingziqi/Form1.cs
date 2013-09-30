@@ -16,6 +16,48 @@ namespace jingziqi
             InitializeComponent();
             
         }
+        private enum mycolor{black, white }
+        mycolor chess;
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics; //创建画板,这里的画板是由Form提供的.
+            Pen blackpen = new Pen(Color.Black, 2);//定义了一个黑色,宽度为的画笔
+            g.DrawRectangle(blackpen, 1, 1, 240, 240);//在画板上画矩形
+            g.DrawLine(blackpen, 1, 80, 240, 80);
+            g.DrawLine(blackpen, 1, 160, 240, 160);
+            g.DrawLine(blackpen, 80, 1, 80, 240);
+            g.DrawLine(blackpen, 160, 1, 160, 240);
+        }
+        private void placechess(mycolor chess, Bitmap bitmap, int x, int y, int size)
+        {
+            switch (chess)
+            {
+                case mycolor.black:
+                    break;
+                case mycolor.white:
+                    break;
+            }
+        }
+        private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
+        {
+            int x = e.X;
+            int y = e.Y;
+            Graphics g = pictureBox1.CreateGraphics();
+            Bitmap black = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\黑子.png");
+            Bitmap white = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\白子.png");
+
+            
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            chess = mycolor.black;
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            chess = mycolor.black;
+        }
         /*private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics; //创建画板,这里的画板是由Form提供的.
