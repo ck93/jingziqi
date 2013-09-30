@@ -61,40 +61,57 @@ namespace jingziqi
             Graphics g = pictureBox1.CreateGraphics();
             Bitmap black = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\黑子.png");
             Bitmap white = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\白子.png");
-            if (chess == mycolor.black)
+            if (array[x / 80, y / 80] == 0)
             {
-                if (first && step % 2 == 1 || !first && step % 2 == 0)
+                if (chess == mycolor.black)
                 {
-                    g.DrawImage(black, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
-                    array[x / 80, y / 80] = 1;
+                    if (first && step % 2 == 1 || !first && step % 2 == 0)
+                    {
+                        g.DrawImage(black, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
+                        array[x / 80, y / 80] = 1;
+                    }
+                    else
+                    {
+                        g.DrawImage(white, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
+                        array[x / 80, y / 80] = -1;
+                    }
+                    step++;
                 }
                 else
                 {
-                    g.DrawImage(white, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
-                    array[x / 80, y / 80] = -1;
+                    if (first && step % 2 == 1 || !first && step % 2 == 0)
+                    {
+                        g.DrawImage(white, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
+                        array[x / 80, y / 80] = -1;
+                    }
+                    else
+                    {
+                        g.DrawImage(black, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
+                        array[x / 80, y / 80] = 1;
+                    }
+                    step++;
                 }
-                step++;
             }
             else
-            {
-                if (first && step % 2 == 1 || !first && step % 2 == 0)
-                {
-                    g.DrawImage(white, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
-                    array[x / 80, y / 80] = -1;
-                }
-                else
-                {
-                    g.DrawImage(black, x / 80 * 80 + 10, y / 80 * 80 + 10, 60, 60);
-                    array[x / 80, y / 80] = 1;
-                }
-                step++;
-            }
+                MessageBox.Show("此处不能放置棋子！");
             if (victory() == 1)
-                MessageBox.Show("黑子赢！");
-            if (victory() == -1)
-                MessageBox.Show("白子赢！");
-            if (step == 10)
-                MessageBox.Show("和棋！");
+            {
+                Form2 f = new Form2(this);
+                f.label1.Text = "黑子赢！是否重新开局？";
+                f.ShowDialog(); 
+            }
+            else if (victory() == -1)
+            {
+                Form2 f = new Form2(this);
+                f.label1.Text = "白子赢！是否重新开局？";
+                f.ShowDialog();
+            }
+            else if (step == 10)
+            {
+                Form2 f = new Form2(this);
+                f.label1.Text = "和棋！是否重新开局？";
+                f.ShowDialog();
+            }
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
@@ -107,13 +124,13 @@ namespace jingziqi
             chess = mycolor.white;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     array[i,j] = 0;
             pictureBox1.Image = null;
-            step = 0;
+            step = 1;
         }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
