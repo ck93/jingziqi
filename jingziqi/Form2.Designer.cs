@@ -75,7 +75,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Name = "Form2";
-            this.Text = "Form2";
+            this.Text = "游戏结束";
             this.ResumeLayout(false);
             this.PerformLayout();
 
