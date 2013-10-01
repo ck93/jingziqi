@@ -72,40 +72,74 @@ namespace jingziqi
             int[,] site = new int[3, 3] { { -9, -9, -9 }, { -9, -9, -9 }, { -9, -9, -9 } };
             if (chess == mycolor.black)
             {
-                 for (int i = 0; i < 3; i++)
-                     for (int j = 0; j < 3; j++)
-                     {
-                         if (array[i, j] == 0)
-                         {
-                             array[i, j] = -1;
-                             if (numofpath(array, 1) > 0)
-                                 return (10 * i + j);
-                             for (int m = 0; m < 3; m++)
-                                 for (int n = 0; n < 3; n++)
-                                     if (array[m, n] == 0)
-                                     {
-                                         array[m, n] = 1;
-                                         if (danger(array, 1))
-                                         {
-                                             site[i, j] = -10;
-                                         }
-                                         if (site[i, j] == -9 || value(mycolor.black) < site[i, j])
-                                             site[i, j] = value(mycolor.black);                                        
-                                         array[m, n] = 0;
-                                     }
-                             array[i, j] = 0;
-                         }                         
-                     }
                 for (int i = 0; i < 3; i++)
-                     for (int j = 0; j < 3; j++)
-                         if (site[i, j] > temp)
-                         {
-                             temp = site[i, j];
-                             best = 10 * i + j;
-                         }
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (array[i, j] == 0)
+                        {
+                            array[i, j] = -1;
+                            if (numofpath(array, -1) > 0)
+                                return (10 * i + j);
+                            for (int m = 0; m < 3; m++)
+                                for (int n = 0; n < 3; n++)
+                                    if (array[m, n] == 0)
+                                    {
+                                        array[m, n] = 1;
+                                        if (danger(array, 1))
+                                        {
+                                            site[i, j] = -10;
+                                        }
+                                        if (site[i, j] == -9 || value(mycolor.black) < site[i, j])
+                                            site[i, j] = value(mycolor.black);
+                                        array[m, n] = 0;
+                                    }
+                            array[i, j] = 0;
+                        }
+                    }
+                for (int i = 0; i < 3; i++)
+                    for (int j = 0; j < 3; j++)
+                        if (site[i, j] > temp)
+                        {
+                            temp = site[i, j];
+                            best = 10 * i + j;
+                        }
                 return best;
             }
-            return best;
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (array[i, j] == 0)
+                        {
+                            array[i, j] = 1;
+                            if (numofpath(array, 1) > 0)
+                                return (10 * i + j);
+                            for (int m = 0; m < 3; m++)
+                                for (int n = 0; n < 3; n++)
+                                    if (array[m, n] == 0)
+                                    {
+                                        array[m, n] = -1;
+                                        if (danger(array, -1))
+                                        {
+                                            site[i, j] = -10;
+                                        }
+                                        if (site[i, j] == -9 || value(mycolor.white) < site[i, j])
+                                            site[i, j] = value(mycolor.white);
+                                        array[m, n] = 0;
+                                    }
+                            array[i, j] = 0;
+                        }
+                    }
+                for (int i = 0; i < 3; i++)
+                    for (int j = 0; j < 3; j++)
+                        if (site[i, j] > temp)
+                        {
+                            temp = site[i, j];
+                            best = 10 * i + j;
+                        }
+                return best;
+            }
         }
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
@@ -149,12 +183,16 @@ namespace jingziqi
             }
             else
             {
-                MessageBox.Show("此处不能放置棋子！");
+                MessageBox.Show("此处不能放置棋子！","提示");
                 return;
             }
             if (victory() == 1)
             {
                 ready = false;
+                if (chess == mycolor.black)
+                    label5.Text = (int.Parse(label5.Text) + 1).ToString();
+                else
+                    label6.Text = (int.Parse(label6.Text) + 1).ToString();
                 Form2 f = new Form2(this);
                 f.label1.Text = "黑子赢！是否重新开局？";
                 f.ShowDialog(); 
@@ -162,6 +200,10 @@ namespace jingziqi
             else if (victory() == -1)
             {
                 ready = false;
+                if (chess == mycolor.white)
+                    label5.Text = (int.Parse(label5.Text) + 1).ToString();
+                else
+                    label6.Text = (int.Parse(label6.Text) + 1).ToString();
                 Form2 f = new Form2(this);
                 f.label1.Text = "白子赢！是否重新开局？";
                 f.ShowDialog();
@@ -169,6 +211,7 @@ namespace jingziqi
             else if (step == 10)
             {
                 ready = false;
+                label7.Text = (int.Parse(label7.Text) + 1).ToString();
                 Form2 f = new Form2(this);
                 f.label1.Text = "和棋！是否重新开局？";
                 f.ShowDialog();
@@ -180,13 +223,25 @@ namespace jingziqi
                     int result = search();
                     int xx = result / 10;
                     int yy = result % 10;
-                    g.DrawImage(white, xx * 80 + 10, yy * 80 + 10, 60, 60);
-                    array[xx, yy] = -1;
+                    if (chess == mycolor.black)
+                    {
+                        g.DrawImage(white, xx * 80 + 10, yy * 80 + 10, 60, 60);
+                        array[xx, yy] = -1;
+                    }
+                    else
+                    {
+                        g.DrawImage(black, xx * 80 + 10, yy * 80 + 10, 60, 60);
+                        array[xx, yy] = 1;
+                    }
                     step++;
                 }
                 if (victory() == 1)
                 {
                     ready = false;
+                    if (chess == mycolor.black)
+                        label5.Text = (int.Parse(label5.Text) + 1).ToString();
+                    else
+                        label6.Text = (int.Parse(label6.Text) + 1).ToString();
                     Form2 f = new Form2(this);
                     f.label1.Text = "黑子赢！是否重新开局？";
                     f.ShowDialog();
@@ -194,6 +249,10 @@ namespace jingziqi
                 else if (victory() == -1)
                 {
                     ready = false;
+                    if (chess == mycolor.white)
+                        label5.Text = (int.Parse(label5.Text) + 1).ToString();
+                    else
+                        label6.Text = (int.Parse(label6.Text) + 1).ToString();
                     Form2 f = new Form2(this);
                     f.label1.Text = "白子赢！是否重新开局？";
                     f.ShowDialog();
@@ -201,6 +260,7 @@ namespace jingziqi
                 else if (step == 10)
                 {
                     ready = false;
+                    label7.Text = (int.Parse(label7.Text)+1).ToString();
                     Form2 f = new Form2(this);
                     f.label1.Text = "和棋！是否重新开局？";
                     f.ShowDialog();
@@ -298,8 +358,8 @@ namespace jingziqi
             if (comboBox1.SelectedIndex == 1 && !first)
             {
                 Graphics g = pictureBox1.CreateGraphics();
-                Bitmap black = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\黑子.png");
-                Bitmap white = new Bitmap(@"D:\Documents\GitHub\jingziqi\jingziqi\白子.png");
+                Bitmap black = new Bitmap("黑子.png");
+                Bitmap white = new Bitmap("白子.png");
                 if (chess == mycolor.black)
                 {
                     g.DrawImage(white, 90, 90, 60, 60);
@@ -314,5 +374,7 @@ namespace jingziqi
             }
             ready = true;
         }
+
+
     }
 }
