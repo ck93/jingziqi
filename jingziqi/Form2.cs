@@ -18,7 +18,8 @@ namespace jingziqi
         }
         private Form1 paf;
         private void button1_Click(object sender, EventArgs e)
-        {           
+        {  
+            
             paf.button1_Click(sender,e);
             this.Close();
         }

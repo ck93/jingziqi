@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace jingziqi
 {
@@ -14,7 +15,17 @@ namespace jingziqi
         public Form1()
         {
             InitializeComponent();
+            Thread th = new Thread(new ThreadStart(splash));
+            th.Start();
+            Thread.Sleep(1000);
+            th.Abort();
+            Thread.Sleep(300);
             comboBox1.SelectedIndex = 1;
+        }
+        private void splash()
+        {
+            Form3 form3 = new Form3();
+            form3.ShowDialog();
         }
         int[,] array = new int[3,3]{{0,0,0},{0,0,0},{0,0,0}};
         private enum mycolor{black, white }
@@ -25,12 +36,12 @@ namespace jingziqi
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics; //创建画板,这里的画板是由Form提供的.
-            Pen blackpen = new Pen(Color.Black, 2);//定义了一个黑色,宽度为的画笔
-            g.DrawRectangle(blackpen, 1, 1, 240, 240);//在画板上画矩形
-            g.DrawLine(blackpen, 1, 80, 240, 80);
-            g.DrawLine(blackpen, 1, 160, 240, 160);
-            g.DrawLine(blackpen, 80, 1, 80, 240);
-            g.DrawLine(blackpen, 160, 1, 160, 240);
+            Pen graypen = new Pen(Color.Gray, 2);//定义了一个黑色,宽度为的画笔
+            g.DrawRectangle(graypen, 1, 1, 240, 240);//在画板上画矩形
+            g.DrawLine(graypen, 1, 80, 240, 80);
+            g.DrawLine(graypen, 1, 160, 240, 160);
+            g.DrawLine(graypen, 80, 1, 80, 240);
+            g.DrawLine(graypen, 160, 1, 160, 240);
         }
         private int victory()
         {
@@ -145,6 +156,7 @@ namespace jingziqi
         {
             if (!ready)
                 return;
+            System.Console.Beep(1000,200);
             int x = e.X;
             int y = e.Y;
             Graphics g = pictureBox1.CreateGraphics();
@@ -180,6 +192,7 @@ namespace jingziqi
                     }
                     step++;
                 }
+                ready = false;
             }
             else
             {
@@ -223,6 +236,7 @@ namespace jingziqi
                     int result = search();
                     int xx = result / 10;
                     int yy = result % 10;
+                    System.Threading.Thread.Sleep(500);
                     if (chess == mycolor.black)
                     {
                         g.DrawImage(white, xx * 80 + 10, yy * 80 + 10, 60, 60);
@@ -265,6 +279,8 @@ namespace jingziqi
                     f.label1.Text = "和棋！是否重新开局？";
                     f.ShowDialog();
                 }
+                else 
+                    ready = true;
             }           
         }
         private int numofpath(int[,] array, int dest)
@@ -333,15 +349,6 @@ namespace jingziqi
             chess = mycolor.white;
         }
 
-        public void button1_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
-                    array[i,j] = 0;
-            pictureBox1.Image = null;
-            step = 1;
-            ready = true;
-        }
 
         private void radioButton3_CheckedChanged(object sender, EventArgs e)
         {
@@ -353,13 +360,18 @@ namespace jingziqi
             first = false;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        public void button2_Click(object sender, EventArgs e)
         {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    array[i, j] = 0;
+            pictureBox1.Refresh();
+            step = 1;
             if (comboBox1.SelectedIndex == 1 && !first)
             {
                 Graphics g = pictureBox1.CreateGraphics();
-                Bitmap black = new Bitmap("黑子.png");
-                Bitmap white = new Bitmap("白子.png");
+                Bitmap black = new Bitmap(@"黑子.png");
+                Bitmap white = new Bitmap(@"白子.png");
                 if (chess == mycolor.black)
                 {
                     g.DrawImage(white, 90, 90, 60, 60);
@@ -375,6 +387,32 @@ namespace jingziqi
             ready = true;
         }
 
+        public void button1_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    array[i, j] = 0;
+            pictureBox1.Refresh();
+            step = 1;
+            if (comboBox1.SelectedIndex == 1 && !first)
+            {
+                Graphics g = this.pictureBox1.CreateGraphics();
+                Bitmap black = new Bitmap(@"黑子.png");
+                Bitmap white = new Bitmap(@"白子.png");
+                if (chess == mycolor.black)
+                {
+                    g.DrawImage(white, 90, 90, 60, 60);
+                    array[1, 1] = -1;
+                }
+                else
+                {
+                    g.DrawImage(black, 90, 90, 60, 60);
+                    array[1, 1] = 1;
+                }
+                step++;
+            }
+            ready = true;
+        }
 
     }
 }
